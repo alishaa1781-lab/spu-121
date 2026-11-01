@@ -1,0 +1,38 @@
+name: build
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Unpack project
+        run: |
+          for z in *.zip; do unzip -q -o "$z" -d unpacked; done
+          dir=$(dirname "$(grep -rl 'archives_base_name=spu' unpacked --include=gradle.properties | head -1)")
+          echo "PROJECT_DIR=$dir" >> "$GITHUB_ENV"
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: current
+
+      - name: Build
+        working-directory: ${{ env.PROJECT_DIR }}
+        run: gradle build --stacktrace
+
+      - name: Upload mod jar
+        uses: actions/upload-artifact@v4
+        with:
+          name: spu-1.21.11
+          path: |
+            ${{ env.PROJECT_DIR }}/build/libs/*.jar
+            !${{ env.PROJECT_DIR }}/build/libs/*-sources.jar
