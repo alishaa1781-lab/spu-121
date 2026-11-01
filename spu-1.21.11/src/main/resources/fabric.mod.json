@@ -1,0 +1,19 @@
+{
+	"schemaVersion": 1,
+	"id": "spu",
+	"version": "${version}",
+	"name": "spu-1.21.11",
+	"description": "FT helper: использование предметов по биндам, click GUI на J.",
+	"authors": ["Me"],
+	"license": "MIT",
+	"environment": "client",
+	"entrypoints": {
+		"client": ["com.spu.Spu"]
+	},
+	"depends": {
+		"fabricloader": ">=0.18.1",
+		"minecraft": "~1.21.11",
+		"java": ">=21",
+		"fabric-api": "*"
+	}
+}
